@@ -15,8 +15,26 @@ import {
   LogOut,
   Tally1
 } from 'lucide-react';
+import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from "../firebase";
+import { useNavigate } from 'react-router-dom';
+import { onAuthStateChanged, signOut } from "firebase/auth";
 
 function DoctorHome() {
+  const navigate = useNavigate();
+
+  const docappoint=()=>{
+    navigate('/docapp');
+  }
+  const doccli=()=>{
+    navigate('/doccli');
+  }
+  const docpres=()=>{
+    navigate('/docpres');
+  }
+  const dochist=()=>{
+    navigate('/dochist');
+  }
 
   const [selectedMetric, setSelectedMetric] = useState('daily');
   const d=new Date().getDate();
@@ -40,6 +58,51 @@ function DoctorHome() {
     { time: "4:00 PM", patient: "George Ball", type: "Checkup" }
   ];
 
+  const [doctorData, setDoctorData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      if (!currentUser) {
+        navigate("/login"); 
+      } else {
+        setUser(currentUser);
+        fetchDoctorData(currentUser.uid);
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const fetchDoctorData = async (userId) => {
+    try {
+      const docRef = doc(db, "doctors", userId);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        setDoctorData(docSnap.data());
+      } else {
+        console.log("No such document!");
+      }
+    } catch (error) {
+      console.error("Error fetching doctor data:", error);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigate("doclogin");
+    } catch (error) {
+      console.error("Error logging out:", error);
+    }
+  };
+
+  if (!doctorData) {
+    return <div style={{fontSize:"60px",textAlign:"center",marginTop:"300px"}}>Loading...</div>;
+  }
+
   return (
     <body style={{backgroundColor:"#9ACBD0"}}>
     <div className='home-container'>
@@ -59,10 +122,10 @@ function DoctorHome() {
               <div className="avatar">
                 <User size="40" className="user-icon" />
               </div>
-              <h3 className="name">Dr. Mark Antony</h3>
+              <h3 className="name">Dr. {doctorData.name}</h3>
               <div className="designation">
                 <Award size="16" className="award-icon" />
-                <span className="role">Cardiologist</span>
+                <span className="role">{doctorData.speciality}</span>
               </div>
             </div>
           </div>
@@ -107,7 +170,7 @@ function DoctorHome() {
               <div className='logocontainer' style={{gap:"10px",marginTop:"80px",textAlign:"center",marginLeft:"30px",cursor:"pointer"}}>
                 <h3 style={{color:"white"}}>Settings</h3>
                <Settings size={20} color='white'/>
-               <h3 style={{color:"white"}}>Logout</h3>
+               <h3 style={{color:"white"}} onClick={handleLogout}>Logout</h3>
                <LogOut size={20} color='white'/>
               </div>
           </div>
@@ -118,7 +181,7 @@ function DoctorHome() {
         <div className='tophome'>
             <h3 style={{color:"white",letterSpacing:"1px",fontSize:"25px"}}>Dashboard</h3>
         </div>
-        <div className="card wallet" style={{marginLeft:"70px",cursor:"pointer"}}>
+        <div className="card wallet" style={{marginLeft:"70px",cursor:"pointer"}} onClick={doccli}>
           <div className="overlay"></div>
           <div className="circle">
             <img src={clinic} alt="Clinic" style={{marginTop:"-8px"}} />
@@ -126,7 +189,7 @@ function DoctorHome() {
           <p>Clinic</p>
         </div>
 
-        <div className="card wallet" style={{marginLeft:"40px",cursor:"pointer"}}>
+        <div className="card wallet" style={{marginLeft:"40px",cursor:"pointer"}} onClick={docappoint}>
           <div className="overlay"></div>
           <div className="circle">
             <img src={appoin} style={{ marginLeft: "10px" }} alt="Appointments" />
@@ -134,7 +197,7 @@ function DoctorHome() {
           <p>Appointments</p>
         </div>
 
-        <div className="card wallet" style={{marginLeft:"70px",cursor:"pointer"}}>
+        <div className="card wallet" style={{marginLeft:"70px",cursor:"pointer"}} onClick={docpres}>
           <div className="overlay"></div>
           <div className="circle">
             <img src={pres} alt="Add Prescription" />
@@ -142,7 +205,7 @@ function DoctorHome() {
           <p>Add Prescription</p>
         </div>
 
-        <div className="card wallet" style={{marginLeft:"40px",cursor:"pointer"}}>
+        <div className="card wallet" style={{marginLeft:"40px",cursor:"pointer"}} onClick={dochist}>
           <div className="overlay"></div>
           <div className="circle">
             <img src={pat} style={{ marginLeft: "10px" }} alt="Patient History" />
@@ -159,7 +222,7 @@ function DoctorHome() {
             <Tally1 size={120} color='#1e3a8a'/>
           </div>
           <div className='logo1text'>
-            <h3>Hi Mark, you have <span style={{color:"aliceblue"}}>10 meetings</span> today</h3>
+            <h3>Hi {doctorData.name}, you have <span style={{color:"aliceblue"}}>10 meetings</span> today</h3>
         </div>
         </div>
         

@@ -89,7 +89,7 @@ function DoctorRegister() {
             username: formData.username,
             role: "doctor",
           });
-    
+          window.alert("Registered Successfully")
           navigate("/doclogin");
         } catch (error) {
             if (error.code === "auth/email-already-in-use") {

@@ -31,7 +31,6 @@ function DoctorLogin() {
         return false;
       }
   
-      window.alert("");
       return true;
     };
   
@@ -39,25 +38,32 @@ function DoctorLogin() {
       if (!validateInputs()) return;
   
       try {
-        const userCredential = await signInWithEmailAndPassword(
-          auth,
-          formData.email,
-          formData.password
-        );
+          const userCredential = await signInWithEmailAndPassword(
+              auth,
+              formData.email,
+              formData.password
+          );
   
-        const userId = userCredential.user.uid;
+          const userId = userCredential.user.uid;
+          const userDocRef = doc(db, "doctors", userId);
+          const userDoc = await getDoc(userDocRef);
   
-        const userDoc = await getDoc(doc(db, "doctors", userId));
   
-        if (userDoc.exists() && userDoc.data().role === "doctor") {
-          navigate("/dochome");
-        } else {
-          window.alert("Unauthorized access. Please check your credentials.");
-        }
+          if (userDoc.exists()) {
+              const userData = userDoc.data(); 
+              if (userData?.role === "doctor") {
+                  navigate("/dochome");
+              } else {
+                  window.alert("Unauthorized access. Please check your credentials.");
+              }
+          } else {
+              window.alert("No user data found. Contact support.");
+          }
       } catch (error) {
-        window.alert("Invalid email or password. Try again.");
+          window.alert("Invalid email or password. Try again.");
       }
-    };
+  };
+  
 
     return(
         <div className="bg">

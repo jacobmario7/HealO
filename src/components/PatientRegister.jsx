@@ -60,8 +60,6 @@ function PatientRegister() {
           return false;
         }
     
-        window.alert(""); 
-    
         return true;
       };
 
@@ -83,13 +81,15 @@ function PatientRegister() {
             email: formData.email,
             username: formData.username,
           });
-    
+          window.alert("Registered Successfully")
           navigate("/patlogin");
         }catch (error) {
             if (error.code === "auth/email-already-in-use") {
               window.alert("Email already exists");
+              navigate("/patientreg");
             } else {
               window.alert("Registration failed. Try again.");
+              navigate("/patientreg");
             }
         }
       };

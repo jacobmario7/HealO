@@ -30,7 +30,6 @@ function PatientLogin(){
           return false;
         }
     
-        window.alert(""); 
         return true;
       };
     

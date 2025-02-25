@@ -91,6 +91,8 @@
   outline: none;
   box-shadow: 7px 7px 0px 0px black;
   transition: all 0.5s;
+  caret-color: #00ddff;
+  z-index: 10;
 }
 
 .input:hover{
@@ -105,6 +107,7 @@
   box-shadow: none;
   transition: all 0.5s;
   background:transparent;
+  caret-color: #00ddff;
 }
 
 .input:focus::placeholder{
@@ -158,7 +161,6 @@
   transform: scale(1);
   transition: all 0.5s;
 }
-
 
 .alrbut{
   font-size:0.8rem;
@@ -471,6 +473,43 @@
   margin-left: 30px;
 }
 
+.containerc {
+  width: 50%;
+  margin: auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.input-group {
+  margin: 10px 0;
+}
+
+.clinbut {
+  margin-left: 10px;
+  padding: 5px;
+  font-size: 16px;
+}
+
+.time-slots {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.time-slot {
+  padding: 10px;
+  background-color: #ddd;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  text-align: center;
+  border-radius: 5px;
+}
+
+.time-slot.selected {
+  background-color: #495579; 
+  color: white;
+}
 
 
 
