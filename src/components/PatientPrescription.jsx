@@ -47,7 +47,6 @@ function PatientPrescriptions() {
     return () => unsubscribe();
   };
 
-  // Maintain state after refresh using localStorage
   useEffect(() => {
     const user = auth.currentUser;
     if (user) {

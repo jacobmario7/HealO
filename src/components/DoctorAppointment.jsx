@@ -5,7 +5,7 @@ import { onAuthStateChanged } from "firebase/auth";
 
 function DoctorAppointment() {
   const [appointments, setAppointments] = useState([]);
-  const [refresh, setRefresh] = useState(false); // New state to trigger refresh
+  const [refresh, setRefresh] = useState(false); 
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -15,7 +15,7 @@ function DoctorAppointment() {
     });
   
     return () => unsubscribe();
-  }, [refresh]); // Add `refresh` dependency
+  }, [refresh]); 
   
 
   const fetchAppointments = async (doctorId) => {
@@ -51,7 +51,6 @@ function DoctorAppointment() {
         }
       }
   
-      // Refresh appointment list
       setRefresh(prev => !prev);
     } catch (error) {
       console.error("Error updating appointment status:", error);

@@ -19,7 +19,7 @@ function DoctorHistory() {
         }));
 
         setHistory(historyList);
-        localStorage.setItem("doctorHistory", JSON.stringify(historyList)); // Store in localStorage
+        localStorage.setItem("doctorHistory", JSON.stringify(historyList)); 
       });
 
       return () => unsubscribe();

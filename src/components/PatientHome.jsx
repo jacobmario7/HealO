@@ -14,12 +14,10 @@ function PatientHome() {
   const [patientData, setPatientData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Navigation functions
   const patappoint = () => navigate('/patapp');
   const patpres = () => navigate('/patpres');
   const pathist = () => navigate('/pathist');
 
-  // Function to fetch patient data
   const fetchPatientData = async (uid) => {
     const savedPatient = localStorage.getItem(`patient_${uid}`);
     if (savedPatient) {

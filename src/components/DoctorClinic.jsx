@@ -6,7 +6,7 @@ import { onAuthStateChanged } from "firebase/auth";
 const DoctorClinic = () => {
   const [clinic, setClinic] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [isLoading, setIsLoading] = useState(true); // Ensures proper state before displaying
+  const [isLoading, setIsLoading] = useState(true); 
   const [user, setUser] = useState(null);
   const [formData, setFormData] = useState({
     name: "",
@@ -18,21 +18,19 @@ const DoctorClinic = () => {
   });
   const [selectedSlots, setSelectedSlots] = useState([]);
 
-  // Track auth state to ensure Firebase user is available before fetching data
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       if (currentUser) {
         fetchClinicData(currentUser.uid);
       } else {
-        setIsLoading(false); // Stop loading if no user found
+        setIsLoading(false);
       }
     });
 
     return () => unsubscribeAuth();
   }, []);
 
-  // Function to fetch clinic data
   const fetchClinicData = async (uid) => {
     const savedClinic = localStorage.getItem(`clinic_${uid}`);
     if (savedClinic) {
@@ -53,7 +51,7 @@ const DoctorClinic = () => {
         setSelectedSlots(data.slots || []);
         setIsEditing(false);
         setIsLoading(false);
-        localStorage.setItem(`clinic_${uid}`, JSON.stringify(data)); // Store in localStorage
+        localStorage.setItem(`clinic_${uid}`, JSON.stringify(data)); 
       } else {
         setIsEditing(true);
         setIsLoading(false);
@@ -102,7 +100,7 @@ const DoctorClinic = () => {
       await setDoc(clinicRef, updatedData);
       setClinic(updatedData);
       setIsEditing(false);
-      localStorage.setItem(`clinic_${user.uid}`, JSON.stringify(updatedData)); // Store in localStorage
+      localStorage.setItem(`clinic_${user.uid}`, JSON.stringify(updatedData)); 
     }
   };
 
